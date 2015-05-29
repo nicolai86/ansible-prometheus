@@ -1,0 +1,11 @@
+{
+  "name": "Prometheus Deployment",
+  "version": "0.1.0",
+  "homepage": "https://github.com/nicolai86/ansible-prometheus",
+  "authors": [
+    "Raphael Randschau"
+  ],
+  "description": "A role that sets up prometheus",
+  "license": "MIT",
+  "dependencies": {}
+}
