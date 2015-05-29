@@ -1,0 +1,21 @@
+---
+# prometheus_user defines which user to use to jail & run prometheus
+prometheus_user: "prometheus"
+
+# prometheus_home defines the installation location
+prometheus_home: "/home/prometheus"
+
+# prometheus_template defines the template to be used as prometheus config.
+# you most likely want to modify this
+prometheus_template: "default.yml.j2"
+
+# prometheus_config_file defines the -config.file location
+prometheus_config_file: "{{ prometheus_home }}/prometheus.yml"
+
+# prometheus_storage_local_path defines the -storage.local.path option for prometheus
+prometheus_storage_local_path: "{{ prometheus_home }}/metrics/"
+
+# prometheus_additional_arguments enables you to pass along arbitrary command line
+# arguments.
+# NOTE -config.file and -storage.local.path are configured separately
+prometheus_additional_arguments: ""

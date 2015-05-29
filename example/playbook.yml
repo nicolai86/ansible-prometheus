@@ -1,0 +1,10 @@
+---
+- hosts: vm
+  remote_user: vagrant
+  sudo: true
+  vars:
+    prometheus_user: "prometheus"
+    prometheus_home: "/home/prometheus"
+    prometheus_template: templates/custom.prometheus.yml.j2
+  roles:
+    - nicolai86.prometheus

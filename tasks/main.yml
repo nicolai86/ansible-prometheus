@@ -1,0 +1,51 @@
+# jail configuration
+- name: add prometheus user
+  user:
+    name: "{{ prometheus_user }}"
+    home: "{{ prometheus_home }}"
+    shell: /bin/bash
+    createhome: yes
+
+- stat:
+    path: "{{ prometheus_home }}/prometheus"
+  register: prometheus_binary
+
+# download prometheus
+# TODO(rr) release_name and version should be configurable
+- name: lookup latest release from github
+  action: latest_release username="prometheus" repo="prometheus" release_name="linux-amd64"
+  when: p.stat.isfile is defined and not p.stat.isfile
+
+- name: download latest release
+  get_url:
+    url: "{{ github.download_url }}"
+    validate_certs: no
+    dest: /tmp
+  register: github_download
+  when: p.stat.isfile is defined and not p.stat.isfile
+
+- name: extract release
+  unarchive:
+    src: "{{ github_download.dest }}"
+    dest: "{{ prometheus_home }}"
+    creates: "{{ prometheus_home }}/prometheus"
+  when: p.stat.isfile is defined and not p.stat.isfile
+
+- name: prometheus configuration
+  template:
+    src: "{{ prometheus_template }}"
+    dest: "{{ prometheus_config_file }}"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_user }}"
+
+- name: prometheus service
+  template:
+    src: prometheus.sh.j2
+    dest: /etc/init.d/prometheus
+    mode: 755
+
+- shell: update-rc.d prometheus defaults
+
+- service:
+    name: prometheus
+    state: restarted
